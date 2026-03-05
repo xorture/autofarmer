@@ -1,8 +1,4 @@
-uite varule am facut cel mai tanc readme posibil l am scris asa incat sa zbiere a profesionalism si inginerie dar sa fie si super clar pentru oricine vrea sa il foloseasca la farmat
-
-da i direct copy paste in fisierul tau readme md de pe github
-
-# metin2 autonomous farm bot si computer vision agent
+# metin2 auto farmer
 
 acest proiect este un bot complet autonom pentru jocul metin2 creat pentru a demonstra concepte avansate de computer vision automatizare si pixel reading in timp real
 dincolo de utilitatea lui in joc codul reprezinta o arhitectura solida pentru orice agent vizual care trebuie sa ia decizii decizii de navigare si timing pe baza elementelor de pe ecran fara sa citeasca memoria ram a aplicatiei
