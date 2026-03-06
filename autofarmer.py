@@ -29,6 +29,7 @@ def main():
     
     taura = 0
     tlicori = 0
+    timp_ultimul_gasit = time.time()
     
     zona_bara = {
         "top": 36,
@@ -93,16 +94,20 @@ def main():
             
             if cv2.contourArea(c) > 60: 
                 gasit = True
+                
                 M = cv2.moments(c)
                 if M["m00"] != 0:
                     cx = int(M["m10"] / M["m00"]) + mon["left"]
                     cy = int(M["m01"] / M["m00"]) + mon["top"]
                     
                     print("atac")
-                    pyautogui.moveTo(cx, cy)
+                    pyautogui.moveTo(cx, cy, 0.15) 
                     time.sleep(0.3) 
                     ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
+                    time.sleep(0.08)
                     ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
+                    
+                    pyautogui.moveTo(10, 10, 0.1)
                     
                     bara_gasita = False
                     timp_cautare_bara = time.time()
@@ -127,6 +132,9 @@ def main():
                     if bara_gasita:
                         print("verific bara")
                         timp_start = time.time()
+                        ultimii_pixeli = -1
+                        timp_blocaj = time.time()
+                        
                         while time.time() - timp_start < 120:
                             if keyboard.is_pressed('x'):
                                 return
@@ -137,20 +145,57 @@ def main():
                             m1 = cv2.inRange(hsv_sus, low_rosu1, high_rosu1)
                             m2 = cv2.inRange(hsv_sus, low_rosu2, high_rosu2)
                             m_bara = cv2.bitwise_or(m1, m2)
+                            pixeli_curenti = cv2.countNonZero(m_bara)
                             
-                            if cv2.countNonZero(m_bara) < 5:
+                            if pixeli_curenti < 5:
+                                print("loot si stergere vizuala")
+                                apasa('z')
+                                time.sleep(0.3)
+                                apasa('z')
                                 break
+                                
+                            if abs(pixeli_curenti - ultimii_pixeli) < 10:
+                                if time.time() - timp_blocaj > 7:
+                                    print("blocat in mobi dau scurt din s")
+                                    keyboard.press('s')
+                                    time.sleep(1.5)
+                                    keyboard.release('s')
+                                    keyboard.press('e')
+                                    time.sleep(1.2)
+                                    keyboard.release('e')
+                                    pyautogui.moveTo(10, 10)
+                                    break
+                            else:
+                                ultimii_pixeli = pixeli_curenti
+                                timp_blocaj = time.time()
+                                
                             time.sleep(0.5) 
                     else:
-                        print("nu a dat de el caut altu")
-                    
-                    print("loot")
-                    apasa('z')
+                        print("nu gasesc bara merg mai departe")
+                        keyboard.press('s')
+                        time.sleep(1)
+                        keyboard.release('s')
+                        pyautogui.moveTo(10, 10)
                         
-                    continue
+                    timp_ultimul_gasit = time.time()
+                    continue 
         
         if not gasit:
             print("caut")
+            
+            if time.time() - timp_ultimul_gasit > 12:
+                print("nu am gasit nimic stai asa k ma misc")
+                keyboard.press('w')
+                time.sleep(3)
+                keyboard.release('w')
+                
+                print("reglez camera in caz ca am dat de deal")
+                keyboard.press('t')
+                time.sleep(0.8)
+                keyboard.release('t')
+                
+                timp_ultimul_gasit = time.time()
+                
             keyboard.press('e')
             time.sleep(0.8)
             keyboard.release('e')
